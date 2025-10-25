@@ -2,3 +2,5 @@ fastapi==0.111.1
 uvicorn==0.23.2
 pydantic==2.6.2
 pytest==8.4.0
+black==24.10.0
+trivy==0.67.2
