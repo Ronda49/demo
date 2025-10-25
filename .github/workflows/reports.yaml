@@ -1,0 +1,46 @@
+name: Security Reports with Trivy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  trivy-scan:
+    name: Run Trivy Scans and Save Reports
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          version: latest
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run Trivy FS (File System) Scan
+        run: |
+          TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
+          trivy fs --format json --output "reports/trivy_fs_report_${TIMESTAMP}.json" .
+
+      - name: Build Docker image
+        run: docker build -t fastapi-demo:latest .
+
+      - name: Run Trivy Image Scan
+        run: |
+          TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
+          trivy image --format json --output "reports/trivy_image_report_${TIMESTAMP}.json" fastapi-demo:latest
+
+      - name: Upload Trivy Reports as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-security-reports
+          path: reports/
