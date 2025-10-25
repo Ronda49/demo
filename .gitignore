@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.env.*
+
+# IDEs / editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# Pytest cache
+.pytest_cache/
+.cache/
+
+# Uvicorn / FastAPI
+*.db
+
+# MacOS
+.DS_Store
