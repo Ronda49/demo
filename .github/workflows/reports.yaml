@@ -27,7 +27,7 @@ jobs:
       - name: Install Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          version: 0.67.2
+          version: latest
 
       # 5️⃣ Run Trivy File System scan
       - name: Trivy FS Scan
