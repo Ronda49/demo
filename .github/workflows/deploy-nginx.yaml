@@ -1,0 +1,31 @@
+name: Deploy NGINX to GKE
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up gcloud CLI
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Configure kubectl for GKE cluster
+      run: |
+        gcloud container clusters get-credentials nginx-cluster --zone us-central1-a
+
+    - name: Deploy NGINX to GKE
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
+
+    - name: Verify the service
+      run: kubectl get svc nginx-service
